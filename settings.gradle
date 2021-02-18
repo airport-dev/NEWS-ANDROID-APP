@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "ST11-original-app"

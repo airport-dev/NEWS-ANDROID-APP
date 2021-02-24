@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.github.KwabenBerko:News-API-Java:1.0.0'
+    implementation 'com.airbnb.android:lottie:2.5.5'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     testImplementation 'junit:junit:4.+'

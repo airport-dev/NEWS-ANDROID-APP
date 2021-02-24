@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String API_KEY = "YOUR APIKEY";
+    final String API_KEY = "YOUR APIKEY!!";
     final String BASE_URL="https://newsapi.org/v2/";
     ListView listView;
 
@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //パーツ取得
         listView = (ListView)findViewById(R.id.sample_listview);
+
+        //ローディング画面表示
+        findViewById(R.id.loadingitem).setVisibility(View.VISIBLE);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -48,7 +51,14 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<Headlines> call, Response<Headlines> response) {
 
                 if(!response.isSuccessful()){
+
+                    //ローディング画面非表示
+                    findViewById(R.id.loadingitem).setVisibility(View.GONE);
                     Log.d("TAG","Code: " + response.code());
+                    //エラー画面に遷移する
+                    Intent intent = new Intent(getApplication(),ErrorActivity.class);
+                    intent.putExtra("msg","接続時にエラーが発生しました。 (エラ-コード"+response.code() + ")");
+                    startActivity(intent);
                     return;
                 }
 
@@ -59,9 +69,17 @@ public class MainActivity extends AppCompatActivity {
                 //リストビューに表示する要素を設定
                 if(articles.size() > 0){
                     //件数がある時
+                    findViewById(R.id.loadingitem).setVisibility(View.GONE);
                     setListView(articles);
                 }else{
+                    //ローディング画面非表示
+                    findViewById(R.id.loadingitem).setVisibility(View.GONE);
                     Log.d("TAG","error1: " + articles.size());
+                    //エラー画面に遷移する
+                    Intent intent = new Intent(getApplication(),ErrorActivity.class);
+                    intent.putExtra("msg","記事が取得できませんでした。もう一度読み込み直してください");
+                    startActivity(intent);
+                    return;
                 }
 
 
@@ -69,8 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Headlines> call, Throwable t) {
-
+                //ローディング画面非表示
+                findViewById(R.id.loadingitem).setVisibility(View.GONE);
                 Log.d("TAG","error2: " + t.getMessage());
+                //エラー画面に遷移する
+                Intent intent = new Intent(getApplication(),ErrorActivity.class);
+                intent.putExtra("msg","接続時にエラーが発生しました。 (エラー内容:"+ t.getMessage() + ")");
+                startActivity(intent);
+                return;
             }
         });
 
